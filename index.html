@@ -1,0 +1,2193 @@
+           <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+       <title>Pizzaria DSL Delivery</title>  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --marsala:#6A1B1A;       /* fundo vermelho marsala */
+      --marsala-900:#4A1010;
+      --gold:#D4AF37;         /* dourado */
+      --ivory:#FAF7F2;        /* off-white */
+      --muted:#83766E;
+      --white:#ffffff;
+      --shadow: 0 12px 30px rgba(0,0,0,0.25);
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%}
+    body{
+      font-family: 'Poppins', sans-serif;
+      color:var(--ivory);
+      background: linear-gradient(180deg,var(--marsala) 0%, var(--marsala-900) 100%);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      line-height:1.45;
+    }
+
+    /* Container */
+    .wrap{max-width:1200px;margin:0 auto;padding:28px 20px}
+
+    /* Header */
+    header{
+      background:transparent;
+      display:flex;
+      gap:20px;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px 0;
+    }
+    .brand{display:flex;gap:14px;align-items:center}
+    .logo-mark{
+      width:64px;height:64px;border-radius:12px;
+      background:linear-gradient(135deg,var(--gold),rgba(212,175,55,0.6));
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:var(--shadow);
+      font-family:'Playfair Display',serif;color:var(--marsala-900);font-weight:700;
+      font-size:22px;
+    }
+    .brand h1{font-family:'Playfair Display',serif;font-size:20px;color:var(--ivory);margin:0}
+    .brand p{font-size:12px;color:rgba(250,247,242,.85);margin-top:3px}
+
+    /* Nav actions */
+    .actions{display:flex;gap:12px;align-items:center}
+    .btn{
+      background:transparent;border:1px solid rgba(255,255,255,.12);color:var(--ivory);
+      padding:10px 14px;border-radius:12px;font-weight:600;cursor:pointer;
+      transition:all .18s;backdrop-filter: blur(6px)
+    }
+    .btn.primary{
+      background:var(--gold);color:var(--marsala-900);border:none;
+      box-shadow:0 8px 20px rgba(0,0,0,0.2);
+    }
+    .btn:hover{transform:translateY(-3px)}
+    .btn.primary:hover{filter:brightness(.95)}
+
+    /* Hero */
+    .hero{
+      display:grid;
+      grid-template-columns: 1fr 480px;
+      gap:32px;
+      align-items:center;
+      margin:28px 0 36px;
+    }
+    .hero .left h2{
+      font-family:'Playfair Display',serif;
+      font-size:38px;color:var(--gold);margin-bottom:8px;
+      line-height:1.02;
+    }
+    .hero .left p{color:rgba(250,247,242,.95);font-size:16px;margin-bottom:18px;max-width:680px}
+    .hero .kpis{display:flex;gap:12px;flex-wrap:wrap}
+    .kpi{background:rgba(255,255,255,.04);padding:10px 14px;border-radius:12px;font-weight:600;color:var(--ivory);font-size:14px}
+
+    .hero .art{
+      border-radius:20px;overflow:hidden;box-shadow:var(--shadow);
+      border:1px solid rgba(255,255,255,.06)
+    }
+    .hero .art img{width:100%;height:100%;display:block;object-fit:cover}
+
+    /* Catalog title */
+    .section-title{
+      text-align:left;color:var(--gold);font-family:'Playfair Display',serif;font-size:26px;margin:8px 0 18px;
+    }
+
+    /* Categories */
+    .cats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+    .chip{padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);color:var(--ivory);cursor:pointer;font-weight:600}
+    .chip.active{background:var(--gold);color:var(--marsala-900);box-shadow:0 8px 20px rgba(0,0,0,0.18)}
+
+    /* Grid */
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:20px;
+      margin-bottom:28px;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+      transition:transform .18s;
+      display:flex;flex-direction:column;
+    }
+    .card:hover{transform:translateY(-6px)}
+    .card .thumb{height:180px;overflow:hidden;background-color: #4A1010;display:flex;align-items:center;justify-content:center;}
+    .card .thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .35s}
+    .card:hover .thumb img{transform:scale(1.06)}
+    .card .body{padding:14px;display:flex;flex-direction:column;gap:10px}
+    .card h3{font-family:'Playfair Display',serif;color:var(--gold);font-size:18px;margin:0}
+    .card p{color:var(--ivory);opacity:.95;font-size:13px;margin:0}
+    .card .meta{display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .price{color:var(--gold);font-weight:800;font-size:16px}
+    .sizes{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+    .size-btn{padding:6px 10px;border-radius:10px;border:1px solid rgba(255,255,255,.06);background:transparent;color:var(--ivory);cursor:pointer;font-weight:600;font-size:13px}
+    .size-btn.active{background:var(--gold);color:var(--marsala-900);box-shadow:0 6px 18px rgba(0,0,0,0.18)}
+
+    .card .actions{display:flex;gap:10px;margin-top:8px}
+    .add-cart{flex:1;padding:10px;border-radius:10px;border:none;background:var(--gold);color:var(--marsala-900);font-weight:700;cursor:pointer}
+    .whatsapp-now{padding:10px;border-radius:10px;border:2px solid rgba(255,255,255,.06);background:transparent;color:var(--ivory);cursor:pointer;font-weight:700}
+
+    /* Cart drawer */
+    .cart-btn{
+      position:fixed;left:20px;bottom:20px;background:var(--marsala-900);color:var(--gold);width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;z-index:80;box-shadow:var(--shadow);border:2px solid rgba(255,255,255,.06);cursor:pointer
+    }
+    .cart-count{position:absolute;right:-6px;top:-6px;background:var(--gold);color:var(--marsala-900);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+
+    .drawer{position:fixed;right:-420px;top:0;bottom:0;width:420px;background:var(--ivory);color:var(--marsala-900);box-shadow: -12px 0 30px rgba(0,0,0,0.35);transition:right .28s;padding:18px;z-index:90;border-left:1px solid rgba(0,0,0,.06);display:flex;flex-direction:column}
+    .drawer.open{right:0}
+    .drawer header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+    .drawer h4{margin:0;font-family:'Playfair Display',serif;color:var(--marsala-900)}
+    .close-drawer{background:transparent;border:none;font-size:26px;cursor:pointer;color:var(--muted)}
+
+    .cart-items{flex:1;overflow:auto;padding-right:6px;display:flex;flex-direction:column;gap:12px}
+    .ci{background:#fff;border-radius:12px;padding:10px;border:1px solid rgba(0,0,0,.04);display:flex;gap:10px;align-items:center}
+    .ci img{width:64px;height:64px;object-fit:cover;border-radius:8px}
+    .ci .info{flex:1}
+    .ci .title{font-weight:700;color:var(--marsala-900)}
+    .ci .small{font-size:13px;color:var(--muted)}
+    .ci .qty{display:flex;gap:6px;align-items:center}
+    .qty-btn{background:transparent;border:1px solid rgba(0,0,0,.06);padding:6px 8px;border-radius:8px;cursor:pointer}
+
+    .cart-footer{border-top:1px solid rgba(0,0,0,.04);padding-top:12px;display:flex;flex-direction:column;gap:8px}
+    .total-row{display:flex;justify-content:space-between;align-items:center;font-weight:800}
+    .send-zap{background:var(--marsala-900);color:var(--gold);padding:12px;border-radius:12px;border:none;font-weight:800;cursor:pointer}
+
+    /* Form fields in drawer */
+    .field{display:flex;flex-direction:column;gap:6px}
+    .field label{font-size:13px;color:var(--marsala-900);font-weight:600}
+    .field input,.field textarea{padding:10px;border-radius:10px;border:1px solid rgba(0,0,0,.06);font-size:14px}
+    .field textarea{min-height:76px;resize:vertical}
+
+    /* Footer */
+    footer{margin-top:36px;padding:28px 0;text-align:center;color:rgba(250,247,242,.9)}
+
+    /* Responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;gap:18px}
+      .drawer{width:100%;right:-100%}
+      .drawer.open{right:0}
+    }
+
+    /* Half pizza selection */
+    .half-pizza-selection {
+      display: none;
+      margin-top: 10px;
+      padding: 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+    }
+    
+    .half-pizza-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    
+    .half-pizza-option input {
+      width: auto;
+    }
+    
+    .half-pizza-option label {
+      font-size: 13px;
+      color: var(--ivory);
+    }
+    
+    .flavor-select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.1);
+      color: var(--ivory);
+      border: 1px solid rgba(255,255,255,0.1);
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="wrap">
+    <!-- Header -->
+    <header>
+      <div class="brand">
+        <div class="logo-mark">DL</div>
+        <div>
+          <h1>Pizzaria DLS Delivery</h1>
+          <p>Desde 1995 — Massa artesanal &amp; ingredientes selecionados</p>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn" id="btn-cardapio">Cardápio</button>
+        <button class="btn primary" id="btn-open-cart">Ver Carrinho</button>
+      </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="left">
+        <h2>Sabores que viram tradição — peça e receba em até 45 minutos</h2>
+        <p>Promoção de hoje: <strong style="color:var(--gold)">Pizza G + Refrigerante por R$59</strong>. Clique em adicionar para montar seu pedido — você finalizará tudo no WhatsApp.</p>
+        <div class="kpis">
+          <div class="kpi">Massa de longa fermentação</div>
+          <div class="kpi">Ingredientes selecionados</div>
+          <div class="kpi">Entrega quente &amp; rápida</div>
+        </div>
+      </div>
+
+      <div class="art">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80" alt="Pizza destaque">
+      </div>
+    </section>
+
+    <!-- Catalog -->
+    <div>
+      <div class="section-title">Nosso Cardápio Premium</div>
+
+      <div class="cats" id="categories">
+        <div class="chip active" data-cat="all">Todas</div>
+        <div class="chip" data-cat="tradicionais">Tradicionais</div>
+        <div class="chip" data-cat="especiais">Especiais</div>
+        <div class="chip" data-cat="doces">Doces</div>
+        <div class="chip" data-cat="bebidas">Bebidas</div>
+      </div>
+
+      <div class="grid" id="grid">
+        <!-- ALHO -->
+        <article class="card" data-cat="tradicionais" data-id="alho">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Alho</h3>
+            <p>Massa, mussarela, alho, tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="35">R$ 35,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="35" data-size="G">G — R$35</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="alho-half" class="half-pizza-checkbox">
+                <label for="alho-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="alho">Adicionar</button>
+              <button class="whatsapp-now" data-id="alho">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ATUM -->
+        <article class="card" data-cat="tradicionais" data-id="atum">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Atum</h3>
+            <p>Massa, mussarela, atum, tomate, azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="38">R$ 38,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="38" data-size="G">G — R$38</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="atum-half" class="half-pizza-checkbox">
+                <label for="atum-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="atum">Adicionar</button>
+              <button class="whatsapp-now" data-id="atum">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ATUM ESPECIAL -->
+        <article class="card" data-cat="especiais" data-id="atum_especial">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Atum Especial</h3>
+            <p>Massa, mussarela, atum, parmesão, tomate, azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="42">R$ 42,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="42" data-size="G">G — R$42</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="atum_especial-half" class="half-pizza-checkbox">
+                <label for="atum_especial-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="atum_especial">Adicionar</button>
+              <button class="whatsapp-now" data-id="atum_especial">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ATUM COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="atum_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Atum com Catupiry</h3>
+            <p>Massa, mussarela, atum, catupiry, tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="43">R$ 43,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="43" data-size="G">G — R$43</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="atum_catupiry-half" class="half-pizza-checkbox">
+                <label for="atum_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="atum_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="atum_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- AMERICANA -->
+        <article class="card" data-cat="especiais" data-id="americana">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Americana</h3>
+            <p>Massa, mussarela, bacon, champignon, ovo, tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="45">R$ 45,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="45" data-size="G">G — R$45</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="americana-half" class="half-pizza-checkbox">
+                <label for="americana-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="americana">Adicionar</button>
+              <button class="whatsapp-now" data-id="americana">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- A BOLONHESA -->
+        <article class="card" data-cat="especiais" data-id="bolonhesa">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>A Bolonhesa</h3>
+            <p>Massa, mussarela, carne moída, azeitona, pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="44">R$ 44,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="44" data-size="G">G — R$44</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="bolonhesa-half" class="half-pizza-checkbox">
+                <label for="bolonhesa-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="bolonhesa">Adicionar</button>
+              <button class="whatsapp-now" data-id="bolonhesa">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- BACON -->
+        <article class="card" data-cat="tradicionais" data-id="bacon">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Bacon</h3>
+            <p>Massa, mussarela, bacon, alho, tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="38">R$ 38,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="38" data-size="G">G — R$38</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="bacon-half" class="half-pizza-checkbox">
+                <label for="bacon-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="bacon">Adicionar</button>
+              <button class="whatsapp-now" data-id="baco">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- BACON COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="bacon_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Bacon com Catupiry</h3>
+            <p>Massa, mussarela, bacon, catupiry, azeitona, tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="42">R$ 42,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="42" data-size="G">G — R$42</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="bacon_catupiry-half" class="half-pizza-checkbox">
+                <label for="bacon_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="bacon_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="bacon_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- BAIANA -->
+        <article class="card" data-cat="especiais" data-id="baiana">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Baiana</h3>
+            <p>Massa, mussarela, calabresa, ovos, pimenta calabresa, cebola.</p>
+            <div class="meta">
+              <div class="price" data-base="41">R$ 41,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="41" data-size="G">G — R$41</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="baiana-half" class="half-pizza-checkbox">
+                <label for="baiana-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="baiana">Adicionar</button>
+              <button class="whatsapp-now" data-id="baiana">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CALABRESA -->
+        <article class="card" data-cat="tradicionais" data-id="calabresa">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Calabresa</h3>
+            <p>Massa, mussarela, calabresa, tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="36">R$ 36,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="36" data-size="G">G — R$36</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="calabresa-half" class="half-pizza-checkbox">
+                <label for="calabresa-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="calabresa">Adicionar</button>
+              <button class="whatsapp-now" data-id="calabresa">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CALABRESA ACEBOLADA -->
+        <article class="card" data-cat="tradicionais" data-id="calabresa_acebolada">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Calabresa Acebolada</h3>
+            <p>Massa, mussarela, calabresa, cebola, tomate, pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="37">R$ 37,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="37" data-size="G">G — R$37</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="calabresa_acebolada-half" class="half-pizza-checkbox">
+                <label for="calabresa_acebolada-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="calabresa_acebolada">Adicionar</button>
+              <button class="whatsapp-now" data-id="calabresa_acebolada">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CALABRESA COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="calabresa_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Calabresa com Catupiry</h3>
+            <p>Massa, mussarela, calabresa, catupiry, tomate e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="40">R$ 40,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="40" data-size="G">G — R$40</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="calabresa_catupiry-half" class="half-pizza-checkbox">
+                <label for="calabresa_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="calabresa_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="calabresa_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CAMARÃO -->
+        <article class="card" data-cat="especiais" data-id="camarao">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Camarão</h3>
+            <p>Massa, mussarela, camarão, pimentão e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="55">R$ 55,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="55" data-size="G">G — R$55</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="camarao-half" class="half-pizza-checkbox">
+                <label for="camarao-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="camarao">Adicionar</button>
+              <button class="whatsapp-now" data-id="camarao">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CAMARÃO COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="camarao_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Camarão com Catupiry</h3>
+            <p>Massa, mussarela, camarão, catupiry e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="58">R$ 58,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="58" data-size="G">G — R$58</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="camarao_catupiry-half" class="half-pizza-checkbox">
+                <label for="camarao_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="camarao_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="camarao_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARNE SECA -->
+        <article class="card" data-cat="especiais" data-id="carne_seca">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Carne Seca</h3>
+            <p>Massa, mussarela, carne seca, azeitona, cebola e tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="46">R$ 46,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="46" data-size="G">G — R$46</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="carne_seca-half" class="half-pizza-checkbox">
+                <label for="carne_seca-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="carne_seca">Adicionar</button>
+              <button class="whatsapp-now" data-id="carne_seca">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CARNE SECA COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="carne_seca_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Carne Seca com Catupiry</h3>
+            <p>Massa, mussarela, carne seca, catupiry e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="48">R$ 48,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="48" data-size="G">G — R$48</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="carne_seca_catupiry-half" class="half-pizza-checkbox">
+                <label for="carne_seca_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="carne_seca_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="carne_seca_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRANCESA -->
+        <article class="card" data-cat="especiais" data-id="francesa">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Francesa</h3>
+            <p>Massa, mussarela, presunto, bacon, ovo e batata palha.</p>
+            <div class="meta">
+              <div class="price" data-base="43">R$ 43,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="43" data-size="G">G — R$43</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="francesa-half" class="half-pizza-checkbox">
+                <label for="francesa-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="francesa">Adicionar</button>
+              <button class="whatsapp-now" data-id="francesa">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRANGO -->
+        <article class="card" data-cat="tradicionais" data-id="frango">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Frango</h3>
+            <p>Massa, mussarela, peito de frango, tomate e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="38">R$ 38,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="38" data-size="G">G — R$38</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="frango-half" class="half-pizza-checkbox">
+                <label for="frango-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="frango">Adicionar</button>
+              <button class="whatsapp-now" data-id="frango">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRANGO COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="frango_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Frango com Catupiry</h3>
+            <p>Massa, mussarela, peito de frango, catupiry e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="42">R$ 42,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="42" data-size="G">G — R$42</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="frango_catupiry-half" class="half-pizza-checkbox">
+                <label for="frango_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="frango_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="frango_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- FRANGO COM CHEDDAR -->
+        <article class="card" data-cat="especiais" data-id="frango_cheddar">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Frango com Cheddar</h3>
+            <p>Massa, mussarela, peito de frango, cheddar, azeitona e tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="44">R$ 44,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="44" data-size="G">G — R$44</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="frango_cheddar-half" class="half-pizza-checkbox">
+                <label for="frango_cheddar-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="frango_cheddar">Adicionar</button>
+              <button class="whatsapp-now" data-id="frango_cheddar">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- GOLDEN CREAM -->
+        <article class="card" data-cat="especiais" data-id="golden_cream">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Golden Cream</h3>
+            <p>Massa, mussarela, peito de frango, pêssego e creme de leite.</p>
+            <div class="meta">
+              <div class="price" data-base="47">R$ 47,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="47" data-size="G">G — R$47</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="golden_cream-half" class="half-pizza-checkbox">
+                <label for="golden_cream-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="golden_cream">Adicionar</button>
+              <button class="whatsapp-now" data-id="golden_cream">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ITABUNENSE -->
+        <article class="card" data-cat="especiais" data-id="itabunense">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Itabunense</h3>
+            <p>Massa, mussarela, presunto, bacon, calabresa, ervilha, tomate e pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="46">R$ 46,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="46" data-size="G">G — R$46</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="itabunense-half" class="half-pizza-checkbox">
+                <label for="itabunense-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="itabunense">Adicionar</button>
+              <button class="whatsapp-now" data-id="itabunense">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- LOMBO CANADENSE -->
+        <article class="card" data-cat="especiais" data-id="lombo_canadense">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Lombo Canadense</h3>
+            <p>Massa, mussarela, lombo canadense, azeitona, tomate e pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="49">R$ 49,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="49" data-size="G">G — R$49</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="lombo_canadense-half" class="half-pizza-checkbox">
+                <label for="lombo_canadense-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="lombo_canadense">Adicionar</button>
+              <button class="whatsapp-now" data-id="lombo_canadense">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- LOMBO COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="lombo_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Lombo com Catupiry</h3>
+            <p>Massa, mussarela, lombo defumado, catupiry e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="50">R$ 50,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="50" data-size="G">G — R$50</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="lombo_catupiry-half" class="half-pizza-checkbox">
+                <label for="lombo_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="lombo_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="lombo_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- LOMBO ESPECIAL -->
+        <article class="card" data-cat="especiais" data-id="lombo_especial">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Lombo Especial</h3>
+            <p>Massa, mussarela, lombo defumado, bacon, cebola e tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="52">R$ 52,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="52" data-size="G">G — R$52</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="lombo_especial-half" class="half-pizza-checkbox">
+                <label for="lombo_especial-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="lombo_especial">Adicionar</button>
+              <button class="whatsapp-now" data-id="lombo_especial">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- MARGUERITA -->
+        <article class="card" data-cat="tradicionais" data-id="marguerita">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Marguerita</h3>
+            <p>Massa, mussarela, parmesão, manjericão e tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="35">R$ 35,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="35" data-size="G">G — R$35</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="marguerita-half" class="half-pizza-checkbox">
+                <label for="marguerita-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="marguerita">Adicionar</button>
+              <button class="whatsapp-now" data-id="marguerita">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- MUSSARELA -->
+        <article class="card" data-cat="tradicionais" data-id="mussarela">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Mussarela</h3>
+            <p>Massa, mussarela, tomate e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="32">R$ 32,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="32" data-size="G">G — R$32</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="mussarela-half" class="half-pizza-checkbox">
+                <label for="mussarela-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="mussarela">Adicionar</button>
+              <button class="whatsapp-now" data-id="mussarela">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- MILHO VERDE -->
+        <article class="card" data-cat="tradicionais" data-id="milho_verde">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Milho Verde</h3>
+            <p>Massa, mussarela, milho verde, tomate e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="34">R$ 34,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="34" data-size="G">G — R$34</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="milho_verde-half" class="half-pizza-checkbox">
+                <label for="milho_verde-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="milho_verde">Adicionar</button>
+              <button class="whatsapp-now" data-id="milho_verde">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- MILHO COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="milho_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Milho com Catupiry</h3>
+            <p>Massa, mussarela, milho verde, catupiry e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="37">R$ 37,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="37" data-size="G">G — R$37</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="milho_catupiry-half" class="half-pizza-checkbox">
+                <label for="milho_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="milho_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="milho_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- MIXTA -->
+        <article class="card" data-cat="especiais" data-id="mista">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Mista</h3>
+            <p>Massa, mussarela, presunto, calabresa, peito de frango, milho verde e tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="45">R$ 45,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="45" data-size="G">G — R$45</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="mista-half" class="half-pizza-checkbox">
+                <label for="mista-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="mista">Adicionar</button>
+              <button class="whatsapp-now" data-id="mista">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- PORTUGUESA -->
+        <article class="card" data-cat="tradicionais" data-id="portuguesa">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Portuguesa</h3>
+            <p>Massa, mussarela, presunto, ovos, cebola e pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="40">R$ 40,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="40" data-size="G">G — R$40</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="portuguesa-half" class="half-pizza-checkbox">
+                <label for="portuguesa-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="portuguesa">Adicionar</button>
+              <button class="whatsapp-now" data-id="portuguesa">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- PALMITO -->
+        <article class="card" data-cat="tradicionais" data-id="palmito">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Palmito</h3>
+            <p>Massa, mussarela, palmito, tomate e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="39">R$ 39,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="39" data-size="G">G — R$39</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="palmito-half" class="half-pizza-checkbox">
+                <label for="palmito-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="palmito">Adicionar</button>
+              <button class="whatsapp-now" data-id="palmito">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- PALMITO COM CATUPIRY -->
+        <article class="card" data-cat="especiais" data-id="palmito_catupiry">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Palmito com Catupiry</h3>
+            <p>Massa, mussarela, palmito, bacon e catupiry.</p>
+            <div class="meta">
+              <div class="price" data-base="42">R$ 42,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="42" data-size="G">G — R$42</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="palmito_catupiry-half" class="half-pizza-checkbox">
+                <label for="palmito_catupiry-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="palmito_catupiry">Adicionar</button>
+              <button class="whatsapp-now" data-id="palmito_catupiry">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- PEITO DE PERU -->
+        <article class="card" data-cat="especiais" data-id="peito_peru">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Peito de Peru</h3>
+            <p>Massa, mussarela, peito de peru, azeitona e pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="43">R$ 43,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="43" data-size="G">G — R$43</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="peito_peru-half" class="half-pizza-checkbox">
+                <label for="peito_peru-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="peito_peru">Adicionar</button>
+              <button class="whatsapp-now" data-id="peito_peru">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- PEITO DE PERU ESPECIAL -->
+        <article class="card" data-cat="especiais" data-id="peito_peru_especial">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Peito de Peru Especial</h3>
+            <p>Massa, mussarela, peito de peru, creme de leite e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="46">R$ 46,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="46" data-size="G">G — R$46</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="peito_peru_especial-half" class="half-pizza-checkbox">
+                <label for="peito_peru_especial-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="peito_peru_especial">Adicionar</button>
+              <button class="whatsapp-now" data-id="peito_peru_especial">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- PIZZAIOLO -->
+        <article class="card" data-cat="especiais" data-id="pizzaiolo">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Pizzaiolo</h3>
+            <p>Massa, mussarela, presunto, calabresa, palmito, tomate e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="47">R$ 47,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="47" data-size="G">G — R$47</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="pizzaiolo-half" class="half-pizza-checkbox">
+                <label for="pizzaiolo-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="pizzaiolo">Adicionar</button>
+              <button class="whatsapp-now" data-id="pizzaiolo">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- ROMANA -->
+        <article class="card" data-cat="especiais" data-id="romana">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Romana</h3>
+            <p>Massa, mussarela, bacon, presunto e champignon.</p>
+            <div class="meta">
+              <div class="price" data-base="44">R$ 44,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="44" data-size="G">G — R$44</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="romana-half" class="half-pizza-checkbox">
+                <label for="romana-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="romana">Adicionar</button>
+              <button class="whatsapp-now" data-id="romana">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- 4 QUEIJOS -->
+        <article class="card" data-cat="especiais" data-id="quatro_queijos">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>4 Queijos</h3>
+            <p>Massa, mussarela, catupiry, provolone, parmesão e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="45">R$ 45,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="45" data-size="G">G — R$45</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="quatro_queijos-half" class="half-pizza-checkbox">
+                <label for="quatro_queijos-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="quatro_queijos">Adicionar</button>
+              <button class="whatsapp-now" data-id="quatro_queijos">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- SADINHA -->
+        <article class="card" data-cat="especiais" data-id="sadinha">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Sadinha</h3>
+            <p>Massa, mussarela, sardinha, azeitona, pimentão e tomate.</p>
+            <div class="meta">
+              <div class="price" data-base="42">R$ 42,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="42" data-size="G">G — R$42</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="sadinha-half" class="half-pizza-checkbox">
+                <label for="sadinha-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="sadinha">Adicionar</button>
+              <button class="whatsapp-now" data-id="sadinha">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- SARDINHA ACEBOLADA -->
+        <article class="card" data-cat="especiais" data-id="sardinha_acebolada">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Sardinha Acebolada</h3>
+            <p>Massa, mussarela, sardinha, bacon, cebola e pimentão.</p>
+            <div class="meta">
+              <div class="price" data-base="43">R$ 43,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="43" data-size="G">G — R$43</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="sardinha_acebolada-half" class="half-pizza-checkbox">
+                <label for="sardinha_acebolada-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="sardinha_acebolada">Adicionar</button>
+              <button class="whatsapp-now" data-id="sardin
+            <div class="actions">
+              <button class="add-cart" data-id="sardinha_acebolada">Adicionar</button>
+              <button class="whatsapp-now" data-id="sardinha_acebolada">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- SICILIANA -->
+        <article class="card" data-cat="especiais" data-id="siciliana">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Siciliana</h3>
+            <p>Massa, mussarela, bacon, catupiry e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="44">R$ 44,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="44" data-size="G">G — R$44</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="siciliana-half" class="half-pizza-checkbox">
+                <label for="siciliana-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="siciliana">Adicionar</button>
+              <button class="whatsapp-now" data-id="siciliana">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- TOMATE SECO -->
+        <article class="card" data-cat="especiais" data-id="tomate_seco">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Tomate Seco</h3>
+            <p>Massa, mussarela, tomate seco e azeitona.</p>
+            <div class="meta">
+              <div class="price" data-base="46">R$ 46,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="46" data-size="G">G — R$46</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="tomate_seco-half" class="half-pizza-checkbox">
+                <label for="tomate_seco-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="tomate_seco">Adicionar</button>
+              <button class="whatsapp-now" data-id="tomate_seco">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- VEGETARIANA -->
+        <article class="card" data-cat="especiais" data-id="vegetariana">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Vegetariana</h3>
+            <p>Massa, mussarela, palmito, champignon, milho verde, ervilha, azeitona e manjericão.</p>
+            <div class="meta">
+              <div class="price" data-base="45">R$ 45,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="45" data-size="G">G — R$45</button>
+            </div>
+            
+            <div class="half-pizza-selection">
+              <div class="half-pizza-option">
+                <input type="checkbox" id="vegetariana-half" class="half-pizza-checkbox">
+                <label for="vegetariana-half">Metade/Metade</label>
+              </div>
+              <select class="flavor-select" style="display: none;">
+                <option value="">Selecione o segundo sabor</option>
+                <option value="alho">Alho</option>
+                <option value="atum">Atum</option>
+                <option value="calabresa">Calabresa</option>
+                <option value="frango">Frango</option>
+                <option value="marguerita">Marguerita</option>
+                <option value="mussarela">Mussarela</option>
+                <option value="portuguesa">Portuguesa</option>
+              </select>
+            </div>
+            
+            <div class="actions">
+              <button class="add-cart" data-id="vegetariana">Adicionar</button>
+              <button class="whatsapp-now" data-id="vegetariana">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- CHOCOLATE (doce) -->
+        <article class="card" data-cat="doces" data-id="choc">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🍕</div></div>
+          <div class="body">
+            <h3>Pizza de Chocolate</h3>
+            <p>Camada generosa de chocolate ao leite com morangos frescos.</p>
+            <div class="meta">
+              <div class="price" data-base="40">R$ 40,00</div>
+            </div>
+            <div class="sizes">
+              <button class="size-btn active" data-price="40" data-size="G">G — R$40</button>
+            </div>
+            <div class="actions">
+              <button class="add-cart" data-id="choc">Adicionar</button>
+              <button class="whatsapp-now" data-id="choc">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Bebidas -->
+        <article class="card" data-cat="bebidas" data-id="refri2l">
+          <div class="thumb"><div style="font-size:40px;color:#D4AF37">🥤</div></div>
+          <div class="body">
+            <h3>Refrigerante 2L</h3>
+            <p>Coca-Cola, Guaraná ou Sprite — escolha no pedido.</p>
+            <div class="meta">
+              <div class="price" data-base="12">R$ 12,00</div>
+            </div>
+            <div class="actions">
+              <button class="add-cart" data-id="refri2l">Adicionar</button>
+              <button class="whatsapp-now" data-id="refri2l">Pedir agora</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <footer>
+      <div>Rua das Pizzas, 123 — Vila Pizza • (73) 98202-7190</div>
+      <div style="margin-top:8px;color:rgba(255,255,255,.7)">Aberto hoje até 23:30 — Entrega em até 45 minutos</div>
+    </footer>
+  </div>
+
+  <!-- Floating cart button -->
+  <button class="cart-btn" id="openCart" aria-label="Abrir carrinho">
+    🧾
+    <div class="cart-count" id="cartCount">0</div>
+  </button>
+
+  <!-- Drawer -->
+  <aside class="drawer" id="drawer">
+    <header>
+      <h4>Meu Pedido</h4>
+      <button class="close-drawer" id="closeDrawer">×</button>
+    </header>
+
+    <div class="cart-items" id="cartItems"><div style="color:var(--muted)">Seu carrinho está vazio — adicione itens.</div></div>
+
+    <div class="cart-footer">
+      <div class="field">
+        <label for="customerName">Nome (obrigatório)</label>
+        <input id="customerName" placeholder="Seu nome">
+      </div>
+      <div class="field">
+        <label for="customerPhone">Telefone (obrigatório)</label>
+        <input id="customerPhone" placeholder="(73) 9xxxx-xxxx">
+      </div>
+      <div class="field">
+        <label for="customerAddress">Endereço (obrigatório)</label>
+        <input id="customerAddress" placeholder="Rua, número, bairro">
+      </div>
+
+      <div class="total-row">
+        <div>Total</div>
+        <div id="cartTotal">R$ 0,00</div>
+      </div>
+
+      <button class="send-zap" id="sendWhats">Enviar pedido pelo WhatsApp</button>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px">Você será redirecionado para o WhatsApp para confirmar o pedido com a pizzaria.</div>
+    </div>
+  </aside>
+
+  <script>
+    /***************
+     * Config
+     ***************/
+    // WhatsApp full international number (Brasil +55). Given number: 73 98202-7190
+    const WHATSAPP_NUM = '5573982027190';
+
+    /***************
+     * Helpers
+     ***************/
+    const q = sel => document.querySelector(sel);
+    const qa = sel => Array.from(document.querySelectorAll(sel));
+    const money = v => {
+      return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+    };
+
+    /***************
+     * Category filter
+     ***************/
+    const chips = qa('.chip');
+    const cards = qa('.card');
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const cat = chip.getAttribute('data-cat');
+        cards.forEach(card => {
+          if (cat === 'all' || card.getAttribute('data-cat') === cat) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        window.scrollTo({ top: q('.section-title').offsetTop - 20, behavior: 'smooth' });
+      });
+    });
+
+    /***************
+     * Size selection & dynamic price
+     ***************/
+    qa('.card').forEach(card => {
+      const sizeBtns = Array.from(card.querySelectorAll('.size-btn'));
+      const priceEl = card.querySelector('.price');
+
+      sizeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          sizeBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          priceEl.textContent = money(btn.getAttribute('data-price'));
+        });
+      });
+    });
+
+    /***************
+     * Half pizza selection
+     ***************/
+    qa('.half-pizza-checkbox').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const select = this.closest('.half-pizza-selection').querySelector('.flavor-select');
+        select.style.display = this.checked ? 'block' : 'none';
+      });
+    });
+
+    /***************
+     * Cart (local state)
+     ***************/
+    let cart = []; // {id, title, size, price, qty, img, halfPizza, secondFlavor}
+
+    const cartCountEl = q('#cartCount');
+    const cartItemsEl = q('#cartItems');
+    const cartTotalEl = q('#cartTotal');
+
+    // utility: find product info by id
+    function getProductData(cardEl) {
+      const id = cardEl.getAttribute('data-id');
+      const title = cardEl.querySelector('h3').textContent.trim();
+      const img = cardEl.querySelector('.thumb img') ? cardEl.querySelector('.thumb img').src : '';
+      const activeSize = cardEl.querySelector('.size-btn.active');
+      const size = activeSize ? activeSize.getAttribute('data-size') : '';
+      const price = activeSize ? Number(activeSize.getAttribute('data-price')) : Number(cardEl.querySelector('.price').dataset.base);
+      
+      // Check if half pizza is selected
+      const halfPizzaCheckbox = cardEl.querySelector('.half-pizza-checkbox');
+      const isHalfPizza = halfPizzaCheckbox ? halfPizzaCheckbox.checked : false;
+      const secondFlavorSelect = cardEl.querySelector('.flavor-select');
+      const secondFlavor = isHalfPizza && secondFlavorSelect ? secondFlavorSelect.value : '';
+      
+      return { id, title, img, size, price, isHalfPizza, secondFlavor };
+    }
+
+    function renderCart(){
+      cartItemsEl.innerHTML = '';
+      if(cart.length === 0){
+        cartItemsEl.innerHTML = '<div style="color:var(--muted)">Seu carrinho está vazio — adicione itens.</div>';
+      } else {
+        cart.forEach((it, idx) => {
+          const div = document.createElement('div');
+          div.className = 'ci';
+          
+          let titleText = it.title;
+          if (it.isHalfPizza && it.secondFlavor) {
+            titleText = `Metade ${it.title} / Metade ${it.secondFlavor}`;
+          }
+          
+          div.innerHTML = `
+            <div style="width:64px;height:64px;display:flex;align-items:center;justify-content:center;font-size:32px">🍕</div>
+            <div class="info">
+              <div class="title">${titleText} <span style="font-weight:600;color:var(--muted);font-size:13px">• ${it.size}</span></div>
+              <div class="small">${money(it.price)} x ${it.qty} = <strong>${money(it.price * it.qty)}</strong></div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:center">
+              <div class="qty">
+                <button class="qty-btn" data-idx="${idx}" data-action="dec">−</button>
+                <div style="padding:6px 10px">${it.qty}</div>
+                <button class="qty-btn" data-idx="${idx}" data-action="inc">+</button>
+              </div>
+              <button class="qty-btn" data-idx="${idx}" data-action="rm" style="background:#ffeed0;border:1px solid rgba(0,0,0,.04)">✕</button>
+            </div>
+          `;
+          cartItemsEl.appendChild(div);
+        });
+      }
+
+      // totals
+      const subtotal = cart.reduce((s,i)=> s + i.price * i.qty, 0);
+      cartTotalEl.textContent = money(subtotal);
+      cartCountEl.textContent = cart.reduce((s,i)=> s + i.qty, 0);
+    }
+
+    // add item
+    qa('.add-cart').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.card');
+        const p = getProductData(card);
+        
+        // key by id+size+halfPizza+secondFlavor
+        const key = p.id + '|' + p.size + '|' + p.isHalfPizza + '|' + p.secondFlavor;
+        const exists = cart.find(i => i.key === key);
+        
+        if(exists){
+          exists.qty += 1;
+        } else {
+          cart.push({ 
+            key, 
+            id: p.id, 
+            title: p.title, 
+            size: p.size, 
+            price: p.price, 
+            qty: 1, 
+            img: p.img,
+            isHalfPizza: p.isHalfPizza,
+            secondFlavor: p.secondFlavor
+          });
+        }
+        openDrawer();
+        renderCart();
+      });
+    });
+
+    // quick whatsapp for single item
+    qa('.whatsapp-now').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const card = e.target.closest('.card');
+        const p = getProductData(card);
+        
+        let title = p.title;
+        if (p.isHalfPizza && p.secondFlavor) {
+          title = `Metade ${p.title} / Metade ${p.secondFlavor}`;
+        }
+        
+        const msg = buildMessage([{ title, size: p.size, qty: 1, price: p.price }], 0, {
+          name:'', phone:'', address:'', notes:''
+        });
+        openWhatsApp(msg);
+      });
+    });
+
+    // cart item qty controls (delegation)
+    cartItemsEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('button');
+      if(!btn) return;
+      const idx = Number(btn.getAttribute('data-idx'));
+      const action = btn.getAttribute('data-action');
+      if(action === 'inc') cart[idx].qty += 1;
+      if(action === 'dec'){ cart[idx].qty -= 1; if(cart[idx].qty <= 0) cart.splice(idx,1); }
+      if(action === 'rm') cart.splice(idx,1);
+      renderCart();
+    });
+
+    /***************
+     * Drawer open/close
+     ***************/
+    const drawer = q('#drawer');
+    const openCartBtn = q('#openCart');
+    const closeDrawerBtn = q('#closeDrawer');
+    const btnOpenCartHeader = q('#btn-open-cart');
+
+    function openDrawer(){ drawer.classList.add('open'); }
+    function closeDrawer(){ drawer.classList.remove('open'); }
+
+    openCartBtn.addEventListener('click', openDrawer);
+    closeDrawerBtn.addEventListener('click', closeDrawer);
+    btnOpenCartHeader.addEventListener('click', openDrawer);
+
+    /***************
+     * Build WhatsApp message & send
+     ***************/
+    function buildMessage(items, deliveryFee=0, customer){
+      // items: [{title,size,qty,price}]
+      const date = new Date();
+      let lines = [];
+      lines.push('🍕 *Pedido - Pizzaria DLS Delivery*');
+      lines.push('');
+      
+      // Add order content
+      lines.push('📦 *Pedido:*');
+      items.forEach((it, i) => {
+        lines.push(`${i+1}x ${it.title} ${it.size ? '('+it.size+')' : ''} — R$ ${Number(it.price*it.qty).toFixed(2).replace('.',',')}`);
+      });
+      
+      lines.push('');
+      const subtotal = items.reduce((s,i)=> s + i.price * i.qty, 0);
+      if(deliveryFee) lines.push(`Taxa de entrega: R$ ${deliveryFee.toFixed(2).replace('.',',')}`);
+      lines.push(`*Total: R$ ${subtotal.toFixed(2).replace('.',',')}*`);
+      lines.push('');
+      
+      // Add delivery information
+      lines.push('📍 *Entrega:*');
+      lines.push(`${customer.name || '-'}`);
+      lines.push(`${customer.address || '-'}`);
+      lines.push(`📞 ${customer.phone || '-'}`);
+      lines.push('');
+      
+      // Add date and time
+      lines.push(`🕒 ${date.toLocaleString('pt-BR')}`);
+      
+      return encodeURIComponent(lines.join('\n'));
+    }
+
+    function openWhatsApp(encodedMessage){
+      const url = `https://wa.me/${WHATSAPP_NUM}?text=${encodedMessage}`;
+      window.open(url, '_blank');
+    }
+
+    // Send cart via WhatsApp (collect customer fields first)
+    q('#sendWhats').addEventListener('click', () => {
+      if(cart.length === 0){
+        alert('Adicione pelo menos um item ao carrinho antes de enviar o pedido.');
+        return;
+      }
+      const name = q('#customerName').value.trim();
+      const phone = q('#customerPhone').value.trim();
+      const address = q('#customerAddress').value.trim();
+      if(!name || !phone || !address){
+        alert('Por favor preencha Nome, Telefone e Endereço antes de enviar o pedido.');
+        return;
+      }
+      const notes = ''; // optional field could be added
+      
+      const itemsForMsg = cart.map(i => {
+        let title = i.title;
+        if (i.isHalfPizza && i.secondFlavor) {
+          title = `Metade ${i.title} / Metade ${i.secondFlavor}`;
+        }
+        return { title, size: i.size, qty: i.qty, price: i.price };
+      });
+      
+      const msg = buildMessage(itemsForMsg, 0, {name, phone, address, notes});
+      openWhatsApp(msg);
+    });
+
+    /***************
+     * Optional: header buttons (anchor)
+     ***************/
+    q('#btn-cardapio').addEventListener('click', () => {
+      window.scrollTo({top: q('.section-title').offsetTop - 20, behavior:'smooth'});
+    });
+
+    // Initialize cart rendering
+    renderCart();
+  </script>
+</body>
+</html>
